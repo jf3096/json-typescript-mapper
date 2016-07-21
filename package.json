@@ -1,0 +1,12 @@
+{
+  "name": "index",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+      "chai": "~1.8.0",
+      "mocha":"2.0.1"
+  },
+  "scripts": {
+    "test": "mocha ./spec/index.js"
+  }
+}

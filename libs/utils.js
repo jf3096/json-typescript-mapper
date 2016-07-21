@@ -3,17 +3,17 @@ function isTargetType(val, type) {
     return typeof val === type;
 }
 exports.isTargetType = isTargetType;
-function isPrimitive(obj) {
+function isPrimitiveOrPrimitiveClass(obj) {
     return !!(['string', 'boolean', 'number'].indexOf((typeof obj)) > -1 || (obj instanceof String || obj === String ||
         obj instanceof Number || obj === Number ||
         obj instanceof Boolean || obj === Boolean));
 }
-exports.isPrimitive = isPrimitive;
-function isArray(arr) {
-    if (arr === Array) {
+exports.isPrimitiveOrPrimitiveClass = isPrimitiveOrPrimitiveClass;
+function isArrayOrArrayClass(clazz) {
+    if (clazz === Array) {
         return true;
     }
-    return Object.prototype.toString.call(arr) === '[object Array]';
+    return Object.prototype.toString.call(clazz) === '[object Array]';
 }
-exports.isArray = isArray;
+exports.isArrayOrArrayClass = isArrayOrArrayClass;
 //# sourceMappingURL=utils.js.map
