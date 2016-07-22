@@ -1,80 +1,130 @@
-# bilibili-live-video-noty (Bilibili直播下载)
+# json-typescript-mapper
 
-## 来源
-由于我家妹纸需要学习B站直播画画(需求),她跟我说无法下载, 只能录屏. 可是我是拯救世界的程序员, 怎么可能手动做这玩意呢. 于是开始研究/分析, 发现首先视频木有加密(不像能力天空),
-其次可以通过一个动态生成出来的链接进行下载, 这样需要手动使用例如迅雷的方式下载. 但是万恶的主播时不时早上6点直播, 要么就下班的路上一言不合又直播, 我靠!!! 哎, 于是就开始挨喷. 宝宝心里苦:( 所以就花了一下午冲冲忙忙做了这么一个玩意)
-测试了一周没问题, 后来发现B站动态回收直播服务器, 换句话说地址必须动态获取.
+## Introduction
 
-现在挂在在自己的VPS服务器上(http://45.78.48.209:8080), 稳定测试了一个月, 再也没有被家暴了~
+For single page application, data sources are obtained from API server. Instead of directly using api data, we 
+definitely require an adapter layer to transform data as needed. Furthermore, 
+the adapter inverse the the data dependency from API server(API Server is considered uncontrollable and 
+highly unreliable as data structure may be edit by backend coder for some specific purposes)to our adapter 
+which becomes reliable. Thus, this library is created as the adapter make use of es7 reflect decorator.
 
-## 原理
-整个应用挂在在VPS上, 使用PM2维护应用
-
-1. 创建一个Schedule
-
-2. 请求确定Package.json配置的下载直播列表的状态是<直播中>
-
-3. 动态获取下载地址, 返回了XML直播服务器列表与备用直播服务器列表
-
-4. 创建文件流并下载
-
-## 要求
+### Get Started
+```bash
+npm install typescript-json-mapper --save
+```
+## Environment
 * NodeJS
+* Browser
 
-## 语言
+## Language
 * Typescript
-* Javascript (TS会编译成JS, 所以想用JS也可以直接用, 代码我也编译成JS了)
+* Javascript (Typescript will eventually compile to js.)
 
-### 快速开始
-在Package.json中配置需要下载的用户列表,
-其中VideoId在直播URL中获得 (e.g. http://live.bilibili.com/20375), 20375为VideoId, 该VideoId是绝对唯一不变的.
-
-配置案例例如: (Name用于创建文件名)
+### Typescript & ES6
 
 ```bash
-    "users": [
+import {deserialize} from 'typescript-json-mapper';
+
+deserialize(<Class Type>, <JSON Object>);
+```
+
+## Example 
+Here is a complex example, hopefully could give you an idea of how to use it:
+
+```bash
+class Student {
+    @JsonProperty('name')
+    fullName:string;
+
+    constructor() {
+        this.fullName = undefined;
+    }
+}
+
+class Address {
+    @JsonProperty('first-line')
+    firstLine:string;
+    @JsonProperty('second-line')
+    secondLine:string;
+    @JsonProperty({clazz: Student})
+    student:Student;
+    city:string;
+
+    constructor() {
+        this.firstLine = undefined;
+        this.secondLine = undefined;
+        this.city = undefined;
+        this.student = undefined
+    }
+}
+
+class Person {
+    @JsonProperty('Name')
+    name:string;
+    @JsonProperty('xing')
+    surname:string;
+    age:number;
+    @JsonProperty({clazz: Address, name: 'AddressArr'})
+    addressArr:Address[];
+    @JsonProperty({clazz: Address, name: 'Address'})
+    address:Address;
+
+    constructor() {
+        this.name = undefined;
+        this.surname = undefined;
+        this.age = undefined;
+        this.addressArr = undefined;
+        this.address = undefined;
+    }
+}
+```
+
+Now here is what API server return, assume it is already parsed to JSON object.
+```bash
+let json = {
+  "Name": "Mark",
+  "xing": "Galea",
+  "age": 30,
+  "AddressArr": [
       {
-        "name": "雷涟漪の日常",
-        "videoId": 20375
+          "first-line": "Some where",
+          "second-line": "Over Here",
+          "city": "In This City",
+          "student": {
+              name1: "Ailun"
+          }
       },
       {
-        "name": "离城的直播间",
-        "videoId": 61132
-      },
-      {
-        "name": "艾伦测试",
-        "videoId": 288546
+          "first-line": "Some where",
+          "second-line": "Over Here",
+          "city": "In This City",
+          "student": {
+              name1: "Ailun"
+          }
       }
-    ]
+  ],
+  "Address": {
+      "first-line": "Some where",
+      "second-line": "Over Here",
+      "city": "In This City",
+      "student": {
+          name: "Ailun"
+      }
+  }
 ```
-下载目标文件夹: (默认ftp)
+
+Simply, just map it use following code. The mapping is based on <@JsonProperty> decorator meta data.
 
 ```bash
-    "downloadFolder": "ftp",
+const person = deserialize(Person, json);
 ```
 
+## Test Report
+![alt tag](/git-img/Test Results — spec_index.ts)
 
-#### 下载NPM依赖关系, 启动Server
+## Roadmap:
+1) Fully json mapping to the modal class convention should be provided. 
+If any unmapped variable discover, throw exception! 
+This could be useful to detect if API data has change it data structure in the unit testing phrase.
 
-```bash
-$ npm install
-$ npm start
-```
-
-##注意事项
-1) 执行开始之后, 只有时间例如13:01 00:00才执行检测, 设定是每分钟执行一次检查 (妹纸说直播的每分钟都很重要)
-
-2) 下载的FLV文件由于主播可能网络环境不好, 出现断断续续, 导致下载多个小文件是正常的.
-还有一种情况出现多个几百B的文件是由于主播网络问题导致直播API返回是直播进行中, 但实际上文件流已经关闭. 已解决, 待测试.
-
-3) 由于视频文件是直播形式, 所以下载的文件自身没有结束符, 这导致在部分视频工具无法调节进度条. 但大多数视频工具可以调整.
-这个问题的解决方式需要理解视频文件的构造(我研究了一下, 有点麻烦需要检测最后几位二进制的特征做修复)
-
-## TODO
-如果有需求, 可以加个Electron.js的壳, 做成桌面APP
-
-## Demo
-![alt tag](/gif/start.gif)
-
-![alt tag](/gif/complete.gif)
-
+2) Runtime data type validation might be a good idea. Alternatively, if this feacture is not covered in the future, I will make use of json schema concept instead.
