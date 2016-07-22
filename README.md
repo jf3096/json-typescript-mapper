@@ -29,7 +29,7 @@ deserialize(<Class Type>, <JSON Object>);
 ```
 
 ## Example 
-Here is a complex example, hopefully could give you an idea of how to use it:
+Here is a complex example, hopefully could give you an idea of how to use it (for more on how to use, checkout /spec which are unit test cases):
 
 ```bash
 class Student {
@@ -120,7 +120,7 @@ const person = deserialize(Person, json);
 ```
 
 ## Test Report
-![alt tag](/git-img/Test Results — spec_index.ts)
+![alt tag](/git-img/Test Results — spec_index.ts.png)
 
 ## Roadmap:
 1) Fully json mapping to the modal class convention should be provided. 
