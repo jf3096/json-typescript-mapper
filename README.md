@@ -18,7 +18,6 @@ npm install typescript-json-mapper --save
 
 ## Language
 * Typescript
-* Javascript (Typescript will eventually compile to js.)
 
 ### Typescript & ES6
 
