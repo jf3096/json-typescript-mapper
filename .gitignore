@@ -5,6 +5,7 @@ node_modules
 
 #ide settings
 .idea
+.log
 
 #source map
 *.map

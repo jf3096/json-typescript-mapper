@@ -120,6 +120,7 @@ const person = deserialize(Person, json);
 ```
 
 ## Test Report
+The test case will be covered in the next push. This caused by inconsistent return type.
 ![alt tag](/git-img/Test Results — spec_index.ts.png)
 
 ## Roadmap:
