@@ -118,6 +118,24 @@ Simply, just map it use following code. The mapping is based on <@JsonProperty> 
 const person = deserialize(Person, json);
 ```
 
+## Notice
+Remember to add: <b>experimentalDecorators</b> and <b>emitDecoratorMetadata</b> in your tsconfig.json. 
+This is essential to enable decorator support for your typescript program. Example shown as followings:
+
+```bash
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
+```
 ## Test Report
 The test case will be covered in the next push. This caused by inconsistent return type.
 ![alt tag](/git-img/Test Results — spec_index.ts.png)

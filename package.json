@@ -1,6 +1,9 @@
 {
   "name": "json-typescript-mapper",
-  "version": "0.0.2",
+  "version": "1.0.3",
+  "typescript": {
+    "definition": "index.d.ts"
+  },
   "dependencies": {
     "reflect-metadata": "^0.1.3"
   },
