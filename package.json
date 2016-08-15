@@ -1,6 +1,6 @@
 {
   "name": "json-typescript-mapper",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {
     "reflect-metadata": "^0.1.3"
   },

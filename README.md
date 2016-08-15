@@ -10,7 +10,7 @@ which becomes reliable. Thus, this library is created as the adapter make use of
 
 ### Get Started
 ```bash
-npm install typescript-json-mapper --save
+npm install json-typescript-mapper --save
 ```
 ## Environment
 * NodeJS
@@ -22,7 +22,7 @@ npm install typescript-json-mapper --save
 ### Typescript & ES6
 
 ```bash
-import {deserialize} from 'typescript-json-mapper';
+import {deserialize} from 'json-typescript-mapper';
 
 deserialize(<Class Type>, <JSON Object>);
 ```
@@ -127,4 +127,4 @@ The test case will be covered in the next push. This caused by inconsistent retu
 If any unmapped variable discover, throw exception! 
 This could be useful to detect if API data has change it data structure in the unit testing phrase.
 
-2) Runtime data type validation might be a good idea. Alternatively, if this feacture is not covered in the future, I will make use of json schema concept instead.
+2) Runtime data type validation might be a good idea. Alternatively, if this feature is not covered in the future, I will make use of json schema concept instead.
