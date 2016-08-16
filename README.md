@@ -6,7 +6,7 @@ For single page application, data sources are obtained from API server. Instead 
 definitely require an adapter layer to transform data as needed. Furthermore, 
 the adapter inverse the the data dependency from API server(API Server is considered uncontrollable and 
 highly unreliable as data structure may be edit by backend coder for some specific purposes)to our adapter 
-which becomes reliable. Thus, this library is created as the adapter make use of es7 reflect decorator.
+which becomes reliable. Thus, this library is created as the adapter.
 
 ### Get Started
 ```bash
@@ -19,7 +19,7 @@ npm install json-typescript-mapper --save
 ## Language
 * Typescript
 
-### Typescript & ES6
+### Typescript
 
 ```bash
 import {deserialize} from 'json-typescript-mapper';
@@ -69,11 +69,11 @@ class Person {
     address:Address;
 
     constructor() {
-        this.name = undefined;
-        this.surname = undefined;
-        this.age = undefined;
-        this.addressArr = undefined;
-        this.address = undefined;
+        this.name = void 0;
+        this.surname = void 0;
+        this.age = void 0;
+        this.addressArr = void 0;
+        this.address = void 0;
     }
 }
 ```
@@ -139,6 +139,12 @@ This is essential to enable decorator support for your typescript program. Examp
 ## Test Report
 The test case will be covered in the next push. This caused by inconsistent return type.
 ![alt tag](/git-img/Test Results — spec_index.ts.png)
+
+## Fixed
+1) Fixed test cases. According to typescript official website tips [NULL IS BAD](https://basarat.gitbooks.io/typescript/content/docs/tips/null.html), 
+therefore I updated all null value to void 0 which is a better expression than undefined (idea from underscore source code). 
+Most cases it won't affect previous version at all.
+
 
 ## Roadmap:
 1) Fully json mapping to the modal class convention should be provided. 

@@ -3,48 +3,48 @@ import {deserialize, JsonProperty} from '../index';
 
 class Student {
     @JsonProperty('name')
-    fullName:string;
+    fullName: string;
 
     constructor() {
-        this.fullName = undefined;
+        this.fullName = void 0;
     }
 }
 
 class Address {
     @JsonProperty('first-line')
-    firstLine:string;
+    firstLine: string;
     @JsonProperty('second-line')
-    secondLine:string;
+    secondLine: string;
     @JsonProperty({clazz: Student})
-    student:Student;
-    city:string;
+    student: Student;
+    city: string;
 
     constructor() {
-        this.firstLine = undefined;
-        this.secondLine = undefined;
-        this.city = undefined;
-        this.student = undefined
+        this.firstLine = void 0;
+        this.secondLine = void 0;
+        this.city = void 0;
+        this.student = void 0
     }
 }
 
 
 class Person {
     @JsonProperty('Name')
-    name:string;
+    name: string;
     @JsonProperty('xing')
-    surname:string;
-    age:number;
+    surname: string;
+    age: number;
     @JsonProperty({clazz: Address, name: 'AddressArr'})
-    addressArr:Address[];
+    addressArr: Address[];
     @JsonProperty({clazz: Address, name: 'Address'})
-    address:Address;
+    address: Address;
 
     constructor() {
-        this.name = undefined;
-        this.surname = undefined;
-        this.age = undefined;
-        this.addressArr = undefined;
-        this.address = undefined;
+        this.name = void 0;
+        this.surname = void 0;
+        this.age = void 0;
+        this.addressArr = void 0;
+        this.address = void 0;
     }
 }
 
@@ -58,7 +58,7 @@ describe('index()', function () {
             "Address": null
         };
         const person = deserialize(Person, json);
-        expect(person.address).to.be.equals(null);
+        expect(person.address).to.be.equals(void 0);
         expect(person.name).to.be.equal("Mark");
         expect(person.surname).to.be.equal("Galea");
         expect(person.addressArr).to.be.empty;
@@ -125,42 +125,40 @@ describe('index()', function () {
     it('empty json object #1', function () {
         let json = {};
         const person = deserialize(Person, json);
-        console.log(person);
-        expect(person.address).to.be.equal(undefined);
-        expect(person.name).to.be.equal(undefined);
-        expect(person.surname).to.be.equal(undefined);
-        expect(person.addressArr).to.be.equal(undefined);
+        expect(person.address).to.be.equal(void 0);
+        expect(person.name).to.be.equal(void 0);
+        expect(person.surname).to.be.equal(void 0);
+        expect(person.addressArr).to.be.equal(void 0);
     });
 
     it('empty json object #2', function () {
         let json = null;
         const person = deserialize(Person, json);
-        expect(person).to.be.equals(null);
+        expect(person).to.be.equals(void 0);
     });
 
     it('empty json object #3', function () {
-        let json = undefined;
+        let json = void 0;
         const person = deserialize(Person, json);
-        expect(person).to.be.equals(null);
+        expect(person).to.be.equals(void 0);
     });
 
     it('invalid primitive value #1', function () {
         let json = 123;
         const person = deserialize(Person, json);
-        console.log(person);
-        expect(person).to.be.equals(null);
+        expect(person).to.be.equals(void 0);
     });
 
     it('invalid primitive value #2', function () {
         let json = '';
         const person = deserialize(Person, json);
-        expect(person).to.be.equals(null);
+        expect(person).to.be.equals(void 0);
     });
 
     it('invalid primitive value #3', function () {
         let json = NaN;
         const person = deserialize(Person, json);
-        expect(person).to.be.equals(null);
+        expect(person).to.be.equals(void 0);
     });
 
     it('invalid json object #1', function () {
@@ -168,6 +166,6 @@ describe('index()', function () {
             "NameTest": "Mark",
         };
         const person = deserialize(Person, json);
-        expect(person.name).to.be.equals(undefined);
+        expect(person.name).to.be.equals(void 0);
     });
 });

@@ -6,7 +6,7 @@ import {isTargetType, isPrimitiveOrPrimitiveClass, isArrayOrArrayClass} from './
  *
  * @const
  */
-const JSON_META_DATA_KEY = "JsonProperty";
+const JSON_META_DATA_KEY = 'JsonProperty';
 
 /**
  * IDecoratorMetaData<T>
@@ -15,8 +15,8 @@ const JSON_META_DATA_KEY = "JsonProperty";
  * @interface
  */
 export interface IDecoratorMetaData<T> {
-    name?:string,
-    clazz?:{new():T}
+    name?: string,
+    clazz?: {new(): T}
 }
 
 /**
@@ -28,7 +28,7 @@ export interface IDecoratorMetaData<T> {
  * @property {string} clazz, if the target is not primitive type, map it to corresponding class
  */
 class DecoratorMetaData<T> {
-    constructor(public name?:string, public clazz?:{new():T}) {
+    constructor(public name?: string, public clazz?: {new(): T}) {
     }
 }
 
@@ -39,17 +39,17 @@ class DecoratorMetaData<T> {
  * @property {IDecoratorMetaData<T>|string} metadata, encapsulate it to DecoratorMetaData for standard use
  * @return {(target:Object, targetKey:string | symbol)=> void} decorator function
  */
-export function JsonProperty<T>(metadata?:IDecoratorMetaData<T>|string):(target:Object, targetKey:string | symbol)=> void {
-    let decoratorMetaData = null;
+export function JsonProperty<T>(metadata?: IDecoratorMetaData<T>|string): (target: Object, targetKey: string | symbol)=> void {
+    let decoratorMetaData;
 
     if (isTargetType(metadata, 'string')) {
-        decoratorMetaData = new DecoratorMetaData(metadata as string, null);
+        decoratorMetaData = new DecoratorMetaData(metadata as string);
     }
     else if (isTargetType(metadata, 'object')) {
         decoratorMetaData = metadata as IDecoratorMetaData<T>;
     }
     else {
-        throw new Error("index.ts: meta data in Json property is undefined. meta data: " + metadata)
+        throw new Error('index.ts: meta data in Json property is undefined. meta data: ' + metadata)
     }
     return Reflect.metadata(JSON_META_DATA_KEY, decoratorMetaData);
 }
@@ -64,8 +64,8 @@ export function JsonProperty<T>(metadata?:IDecoratorMetaData<T>|string):(target:
  * @return {Function} Function/Class indicate the target property type
  * @description Used for type checking, if it is not primitive type, loop inside recursively
  */
-function getClazz<T>(target:T, propertyKey:string):{new():T} {
-    return Reflect.getMetadata("design:type", target, propertyKey)
+function getClazz<T>(target: T, propertyKey: string): {new(): T} {
+    return Reflect.getMetadata('design:type', target, propertyKey)
 }
 
 
@@ -77,7 +77,7 @@ function getClazz<T>(target:T, propertyKey:string):{new():T} {
  * @property {string} propertyKey, used as target property
  * @return {IDecoratorMetaData<T>} Obtain target property decorator meta data
  */
-function getJsonProperty<T>(target:any, propertyKey:string):IDecoratorMetaData<T> {
+function getJsonProperty<T>(target: any, propertyKey: string): IDecoratorMetaData<T> {
     return Reflect.getMetadata(JSON_META_DATA_KEY, target, propertyKey);
 }
 
@@ -88,12 +88,12 @@ function getJsonProperty<T>(target:any, propertyKey:string):IDecoratorMetaData<T
  * @property {...args:any[]} any arguments
  * @return {IDecoratorMetaData<T>} check if any arguments is null or undefined
  */
-function hasAnyNullOrUndefined(...args:any[]) {
-    return args.some((arg:any)=>arg === null || arg === undefined);
+function hasAnyNullOrUndefined(...args: any[]) {
+    return args.some((arg: any)=>arg === null || arg === undefined);
 }
 
 
-function mapFromJson<T>(decoratorMetadata:IDecoratorMetaData<any>, instance:T, json:Object, key:any):any {
+function mapFromJson<T>(decoratorMetadata: IDecoratorMetaData<any>, instance: T, json: Object, key: any): any {
     /**
      * if decorator name is not found, use target property key as decorator name. It means mapping it directly
      */
@@ -130,26 +130,26 @@ function mapFromJson<T>(decoratorMetadata:IDecoratorMetaData<any>, instance:T, j
  *
  * @return {T} return mapped object
  */
-export function deserialize<T>(Clazz:{new():T}, json:Object):T {
+export function deserialize<T>(Clazz: {new(): T}, json: Object): T {
     /**
      * As it is a recursive function, ignore any arguments that are unset
      */
     if (hasAnyNullOrUndefined(Clazz, json)) {
-        return null;
+        return void 0;
     }
 
     /**
      * Prevent non-json continue
      */
     if (!isTargetType(json, 'object')) {
-        return null;
+        return void 0;
     }
     /**
      * init root class to contain json
      */
     let instance = new Clazz();
 
-    Object.keys(instance).forEach((key:any) => {
+    Object.keys(instance).forEach((key: any) => {
         /**
          * get decoratorMetaData, structure: { name?:string, clazz?:{ new():T } }
          */

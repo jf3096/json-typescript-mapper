@@ -12,7 +12,7 @@ var chai_1 = require('chai');
 var index_1 = require('../index');
 var Student = (function () {
     function Student() {
-        this.fullName = undefined;
+        this.fullName = void 0;
     }
     __decorate([
         index_1.JsonProperty('name'), 
@@ -22,10 +22,10 @@ var Student = (function () {
 }());
 var Address = (function () {
     function Address() {
-        this.firstLine = undefined;
-        this.secondLine = undefined;
-        this.city = undefined;
-        this.student = undefined;
+        this.firstLine = void 0;
+        this.secondLine = void 0;
+        this.city = void 0;
+        this.student = void 0;
     }
     __decorate([
         index_1.JsonProperty('first-line'), 
@@ -43,11 +43,11 @@ var Address = (function () {
 }());
 var Person = (function () {
     function Person() {
-        this.name = undefined;
-        this.surname = undefined;
-        this.age = undefined;
-        this.addressArr = undefined;
-        this.address = undefined;
+        this.name = void 0;
+        this.surname = void 0;
+        this.age = void 0;
+        this.addressArr = void 0;
+        this.address = void 0;
     }
     __decorate([
         index_1.JsonProperty('Name'), 
@@ -77,7 +77,7 @@ describe('index()', function () {
             "Address": null
         };
         var person = index_1.deserialize(Person, json);
-        chai_1.expect(person.address).to.be.equals(null);
+        chai_1.expect(person.address).to.be.equals(void 0);
         chai_1.expect(person.name).to.be.equal("Mark");
         chai_1.expect(person.surname).to.be.equal("Galea");
         chai_1.expect(person.addressArr).to.be.empty;
@@ -141,44 +141,42 @@ describe('index()', function () {
     it('empty json object #1', function () {
         var json = {};
         var person = index_1.deserialize(Person, json);
-        console.log(person);
-        chai_1.expect(person.address).to.be.equal(undefined);
-        chai_1.expect(person.name).to.be.equal(undefined);
-        chai_1.expect(person.surname).to.be.equal(undefined);
-        chai_1.expect(person.addressArr).to.be.equal(undefined);
+        chai_1.expect(person.address).to.be.equal(void 0);
+        chai_1.expect(person.name).to.be.equal(void 0);
+        chai_1.expect(person.surname).to.be.equal(void 0);
+        chai_1.expect(person.addressArr).to.be.equal(void 0);
     });
     it('empty json object #2', function () {
         var json = null;
         var person = index_1.deserialize(Person, json);
-        chai_1.expect(person).to.be.equals(null);
+        chai_1.expect(person).to.be.equals(void 0);
     });
     it('empty json object #3', function () {
-        var json = undefined;
+        var json = void 0;
         var person = index_1.deserialize(Person, json);
-        chai_1.expect(person).to.be.equals(null);
+        chai_1.expect(person).to.be.equals(void 0);
     });
     it('invalid primitive value #1', function () {
         var json = 123;
         var person = index_1.deserialize(Person, json);
-        console.log(person);
-        chai_1.expect(person).to.be.equals(null);
+        chai_1.expect(person).to.be.equals(void 0);
     });
     it('invalid primitive value #2', function () {
         var json = '';
         var person = index_1.deserialize(Person, json);
-        chai_1.expect(person).to.be.equals(null);
+        chai_1.expect(person).to.be.equals(void 0);
     });
     it('invalid primitive value #3', function () {
         var json = NaN;
         var person = index_1.deserialize(Person, json);
-        chai_1.expect(person).to.be.equals(null);
+        chai_1.expect(person).to.be.equals(void 0);
     });
     it('invalid json object #1', function () {
         var json = {
             "NameTest": "Mark",
         };
         var person = index_1.deserialize(Person, json);
-        chai_1.expect(person.name).to.be.equals(undefined);
+        chai_1.expect(person.name).to.be.equals(void 0);
     });
 });
 //# sourceMappingURL=index.js.map

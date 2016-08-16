@@ -6,7 +6,7 @@ var utils_1 = require('./libs/utils');
  *
  * @const
  */
-var JSON_META_DATA_KEY = "JsonProperty";
+var JSON_META_DATA_KEY = 'JsonProperty';
 /**
  * DecoratorMetaData
  * Model used for decoration parameters
@@ -30,15 +30,15 @@ var DecoratorMetaData = (function () {
  * @return {(target:Object, targetKey:string | symbol)=> void} decorator function
  */
 function JsonProperty(metadata) {
-    var decoratorMetaData = null;
+    var decoratorMetaData;
     if (utils_1.isTargetType(metadata, 'string')) {
-        decoratorMetaData = new DecoratorMetaData(metadata, null);
+        decoratorMetaData = new DecoratorMetaData(metadata);
     }
     else if (utils_1.isTargetType(metadata, 'object')) {
         decoratorMetaData = metadata;
     }
     else {
-        throw new Error("index.ts: meta data in Json property is undefined. meta data: " + metadata);
+        throw new Error('index.ts: meta data in Json property is undefined. meta data: ' + metadata);
     }
     return Reflect.metadata(JSON_META_DATA_KEY, decoratorMetaData);
 }
@@ -53,7 +53,7 @@ exports.JsonProperty = JsonProperty;
  * @description Used for type checking, if it is not primitive type, loop inside recursively
  */
 function getClazz(target, propertyKey) {
-    return Reflect.getMetadata("design:type", target, propertyKey);
+    return Reflect.getMetadata('design:type', target, propertyKey);
 }
 /**
  * getJsonProperty
@@ -118,13 +118,13 @@ function deserialize(Clazz, json) {
      * As it is a recursive function, ignore any arguments that are unset
      */
     if (hasAnyNullOrUndefined(Clazz, json)) {
-        return null;
+        return void 0;
     }
     /**
      * Prevent non-json continue
      */
     if (!utils_1.isTargetType(json, 'object')) {
-        return null;
+        return void 0;
     }
     /**
      * init root class to contain json
