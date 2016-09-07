@@ -10,8 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var chai_1 = require('chai');
 var index_1 = require('../index');
-var dateConverter = function (date) {
-    return new Date(date);
+var dateConverter = {
+    fromJson: function (data) {
+        return new Date(data);
+    },
+    toJson: function (data) {
+        return data;
+    }
 };
 var Student = (function () {
     function Student() {
@@ -19,11 +24,11 @@ var Student = (function () {
         this.dateOfBirth = undefined;
     }
     __decorate([
-        index_1.JsonProperty, 
+        index_1.JsonProperty('Name'), 
         __metadata('design:type', String)
     ], Student.prototype, "name", void 0);
     __decorate([
-        index_1.JsonProperty({ fromJson: dateConverter }), 
+        index_1.JsonProperty({ customConverter: dateConverter }), 
         __metadata('design:type', Date)
     ], Student.prototype, "dateOfBirth", void 0);
     return Student;
@@ -31,16 +36,27 @@ var Student = (function () {
 describe('custom-converter', function () {
     it('simple json object', function () {
         var json = {
-            "name": "Mark",
-            "xing": "Galea",
-            "age": 30,
-            "AddressArr": [],
-            "Address": null,
+            "Name": "Mark",
             dateOfBirth: "1995-11-10"
         };
         var student = index_1.deserialize(Student, json);
         chai_1.expect(student.name).to.be.equals('Mark');
         chai_1.expect(student.dateOfBirth).to.be.instanceof(Date);
     });
+});
+describe('serialize', function () {
+    it('simple json object', function () {
+        var student = new Student();
+        student.name = 'Jim';
+        student.dateOfBirth = new Date('1995-11-12');
+        var studentSerialize = index_1.serialize(student);
+        chai_1.expect(studentSerialize.Name).to.be.equals('Jim');
+        chai_1.expect(studentSerialize.dateOfBirth).to.be.instanceof(Date);
+    });
+    //TODO test prop name conversion
+    //TODO test custom converter
+    //TODO test exclude
+    //TODO test noConversion
+    //TODO test deep serialization
 });
 //# sourceMappingURL=custom-converter.js.map

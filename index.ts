@@ -8,6 +8,11 @@ import {isTargetType, isPrimitiveOrPrimitiveClass, isArrayOrArrayClass} from './
  */
 const JSON_META_DATA_KEY = 'JsonProperty';
 
+export interface ICustomConverter {
+    fromJson(data: any): any;
+    toJson(data: any): any;
+}
+
 /**
  * IDecoratorMetaData<T>
  * DecoratorConstraint
@@ -17,7 +22,9 @@ const JSON_META_DATA_KEY = 'JsonProperty';
 export interface IDecoratorMetaData<T> {
     name?: string,
     clazz?: {new(): T},
-    fromJson?: (data: any) => any
+    customConverter?: ICustomConverter,
+    excludeToJson?: boolean,
+    noConversion?: boolean
 }
 
 /**
@@ -52,6 +59,7 @@ export function JsonProperty<T>(metadata?: IDecoratorMetaData<T>|string): (targe
     else {
         throw new Error('index.ts: meta data in Json property is undefined. meta data: ' + metadata)
     }
+
     return Reflect.metadata(JSON_META_DATA_KEY, decoratorMetaData);
 }
 
@@ -159,8 +167,8 @@ export function deserialize<T>(Clazz: {new(): T}, json: Object): T {
         /**
          * pass value to instance
          */
-        if (decoratorMetaData && decoratorMetaData.fromJson) {
-            instance[key] =  decoratorMetaData.fromJson(json[key]);
+        if (decoratorMetaData && decoratorMetaData.customConverter) {
+            instance[key] =  decoratorMetaData.customConverter.fromJson(json[key]);
         } else {
             instance[key] = decoratorMetaData ? mapFromJson(decoratorMetaData, instance, json, key) : json[key];
         }
@@ -168,4 +176,47 @@ export function deserialize<T>(Clazz: {new(): T}, json: Object): T {
     });
 
     return instance;
+}
+
+export function serialize(instance: any): any {
+
+    if (isPrimitiveOrPrimitiveClass(instance)) {
+        return instance;
+    }
+
+    if (isArrayOrArrayClass(instance)) {
+        return instance.map(instanceArr => serialize(instanceArr));
+    }
+
+    const obj = {};
+    Object.keys(instance).forEach(key => {
+        const metadata = getJsonProperty(instance, key);
+        obj[metadata && metadata.name ? metadata.name : key] = serializeProperty(metadata, instance[key]);
+    });
+    return obj;
+}
+
+function serializeProperty(metadata: IDecoratorMetaData<any>, prop: any): any {
+
+    if (!metadata || metadata.excludeToJson === true) {
+        return;
+    }
+
+    if (metadata.noConversion === true) {
+        return prop;
+    }
+
+    if (metadata.customConverter) {
+        return metadata.customConverter.toJson(prop);
+    }
+
+    if (isArrayOrArrayClass(prop)) {
+        return prop.map(propItem => serialize(propItem));
+    }
+
+    if (!isPrimitiveOrPrimitiveClass(prop)) {
+            return serialize(prop);
+    }
+
+    return prop;
 }
