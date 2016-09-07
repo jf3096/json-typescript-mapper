@@ -138,7 +138,12 @@ function deserialize(Clazz, json) {
         /**
          * pass value to instance
          */
-        instance[key] = decoratorMetaData ? mapFromJson(decoratorMetaData, instance, json, key) : json[key];
+        if (decoratorMetaData && decoratorMetaData.fromJson) {
+            instance[key] = decoratorMetaData.fromJson(json[key]);
+        }
+        else {
+            instance[key] = decoratorMetaData ? mapFromJson(decoratorMetaData, instance, json, key) : json[key];
+        }
     });
     return instance;
 }

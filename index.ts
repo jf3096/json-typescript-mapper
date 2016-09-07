@@ -16,7 +16,8 @@ const JSON_META_DATA_KEY = 'JsonProperty';
  */
 export interface IDecoratorMetaData<T> {
     name?: string,
-    clazz?: {new(): T}
+    clazz?: {new(): T},
+    fromJson?: (data: any) => any
 }
 
 /**
@@ -154,10 +155,16 @@ export function deserialize<T>(Clazz: {new(): T}, json: Object): T {
          * get decoratorMetaData, structure: { name?:string, clazz?:{ new():T } }
          */
         let decoratorMetaData = getJsonProperty(instance, key);
+
         /**
          * pass value to instance
          */
-        instance[key] = decoratorMetaData ? mapFromJson(decoratorMetaData, instance, json, key) : json[key];
+        if (decoratorMetaData && decoratorMetaData.fromJson) {
+            instance[key] =  decoratorMetaData.fromJson(json[key]);
+        } else {
+            instance[key] = decoratorMetaData ? mapFromJson(decoratorMetaData, instance, json, key) : json[key];
+        }
+
     });
 
     return instance;
