@@ -15,7 +15,7 @@ var dateConverter = {
         return new Date(data);
     },
     toJson: function (data) {
-        return data;
+        return 'some-date';
     }
 };
 var Student = (function () {
@@ -34,7 +34,7 @@ var Student = (function () {
     return Student;
 }());
 describe('custom-converter', function () {
-    it('simple json object', function () {
+    it('should use the custom converter if available for deserialization', function () {
         var json = {
             "Name": "Mark",
             dateOfBirth: "1995-11-10"
@@ -43,20 +43,99 @@ describe('custom-converter', function () {
         chai_1.expect(student.name).to.be.equals('Mark');
         chai_1.expect(student.dateOfBirth).to.be.instanceof(Date);
     });
+    //TODO serialize test
 });
 describe('serialize', function () {
-    it('simple json object', function () {
-        var student = new Student();
-        student.name = 'Jim';
-        student.dateOfBirth = new Date('1995-11-12');
-        var studentSerialize = index_1.serialize(student);
-        chai_1.expect(studentSerialize.Name).to.be.equals('Jim');
-        chai_1.expect(studentSerialize.dateOfBirth).to.be.instanceof(Date);
+    it('should use the property name given in the meta data', function () {
+        var ClassWithPrimitiveProp = (function () {
+            function ClassWithPrimitiveProp() {
+                this.name = undefined;
+            }
+            __decorate([
+                index_1.JsonProperty('theName'), 
+                __metadata('design:type', String)
+            ], ClassWithPrimitiveProp.prototype, "name", void 0);
+            return ClassWithPrimitiveProp;
+        }());
+        var instance = new ClassWithPrimitiveProp();
+        instance.name = 'Jim';
+        var serializedInstance = index_1.serialize(instance);
+        chai_1.expect(serializedInstance.theName).to.equal('Jim');
     });
-    //TODO test prop name conversion
-    //TODO test custom converter
+    describe('primitive types', function () {
+        var primitiveTypes = ['some-string', true, 25, new Number(25), new Boolean(true)];
+        primitiveTypes.forEach(function (primitiveType) {
+            it("should keep " + typeof primitiveType + " as is", function () {
+                var PrimitiveProp = (function () {
+                    function PrimitiveProp() {
+                        this.someProp = primitiveType;
+                    }
+                    __decorate([
+                        index_1.JsonProperty('someProp'), 
+                        __metadata('design:type', Object)
+                    ], PrimitiveProp.prototype, "someProp", void 0);
+                    return PrimitiveProp;
+                }());
+                var instance = new PrimitiveProp();
+                // instance.someProp  = primitiveType;
+                var serializedInstance = index_1.serialize(instance);
+                chai_1.expect(serializedInstance.someProp).to.equal(primitiveType);
+            });
+        });
+    });
+    it('should keep unspecified objects as is', function () {
+        var ClassWithUnspecObject = (function () {
+            function ClassWithUnspecObject() {
+                this.date = new Date();
+            }
+            __decorate([
+                index_1.JsonProperty('date'), 
+                __metadata('design:type', Date)
+            ], ClassWithUnspecObject.prototype, "date", void 0);
+            return ClassWithUnspecObject;
+        }());
+        var instance = new ClassWithUnspecObject();
+        var serializedInstance = index_1.serialize(instance);
+        chai_1.expect(serializedInstance.date).to.equal(instance.date);
+    });
+    it('should use custom converter if available', function () {
+        var ClassWithCustomConv = (function () {
+            function ClassWithCustomConv() {
+                this.date = new Date();
+            }
+            __decorate([
+                index_1.JsonProperty({ name: 'date', customConverter: dateConverter }), 
+                __metadata('design:type', Date)
+            ], ClassWithCustomConv.prototype, "date", void 0);
+            return ClassWithCustomConv;
+        }());
+        var instance = new ClassWithCustomConv();
+        var serializedInstance = index_1.serialize(instance);
+        chai_1.expect(serializedInstance.date).to.equal('some-date');
+    });
+    it('should exclude properties if specified', function () {
+        var ClassWithExcludedProp = (function () {
+            function ClassWithExcludedProp() {
+                this.name = 'John';
+                this.lastName = 'Doe';
+            }
+            __decorate([
+                index_1.JsonProperty('name'), 
+                __metadata('design:type', String)
+            ], ClassWithExcludedProp.prototype, "name", void 0);
+            __decorate([
+                index_1.JsonProperty({ name: 'lastName', excludeToJson: true }), 
+                __metadata('design:type', String)
+            ], ClassWithExcludedProp.prototype, "lastName", void 0);
+            return ClassWithExcludedProp;
+        }());
+        var instance = new ClassWithExcludedProp();
+        var serializedInstance = index_1.serialize(instance);
+        chai_1.expect(serializedInstance.name).to.equal('John');
+        chai_1.expect(serializedInstance.lastName).to.be.undefined;
+    });
     //TODO test exclude
-    //TODO test noConversion
     //TODO test deep serialization
+    //TODO test with Arrays
 });
 //# sourceMappingURL=custom-converter.js.map

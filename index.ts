@@ -23,8 +23,8 @@ export interface IDecoratorMetaData<T> {
     name?: string,
     clazz?: {new(): T},
     customConverter?: ICustomConverter,
-    excludeToJson?: boolean,
-    noConversion?: boolean
+    excludeToJson?: boolean
+    // noConversion?: boolean
 }
 
 /**
@@ -178,15 +178,22 @@ export function deserialize<T>(Clazz: {new(): T}, json: Object): T {
     return instance;
 }
 
+//TODO only recursive if clazz is given in metadata
+//TODO also for arrays
+//TODO and probably remove unnecessary noConversion option
 export function serialize(instance: any): any {
 
-    if (isPrimitiveOrPrimitiveClass(instance)) {
+    if (!isTargetType(instance, 'object') || isArrayOrArrayClass(instance)) {
         return instance;
     }
 
-    if (isArrayOrArrayClass(instance)) {
-        return instance.map(instanceArr => serialize(instanceArr));
-    }
+    // if (isPrimitiveOrPrimitiveClass(instance)) {
+    //     return instance;
+    // }
+
+    // if (isArrayOrArrayClass(instance)) {
+    //     return instance.map(instanceArr => serialize(instanceArr));
+    // }
 
     const obj = {};
     Object.keys(instance).forEach(key => {
@@ -202,21 +209,21 @@ function serializeProperty(metadata: IDecoratorMetaData<any>, prop: any): any {
         return;
     }
 
-    if (metadata.noConversion === true) {
-        return prop;
-    }
-
     if (metadata.customConverter) {
         return metadata.customConverter.toJson(prop);
+    }
+
+    if (!metadata.clazz) {
+        return prop;
     }
 
     if (isArrayOrArrayClass(prop)) {
         return prop.map(propItem => serialize(propItem));
     }
 
-    if (!isPrimitiveOrPrimitiveClass(prop)) {
-            return serialize(prop);
-    }
+    // if (!isPrimitiveOrPrimitiveClass(prop)) {
+    return serialize(prop);
+    // }
 
-    return prop;
+    // return prop;
 }
