@@ -174,4 +174,4 @@ describe('serialize', function () {
         });
     });
 });
-//# sourceMappingURL=custom-converter.js.map
+//# sourceMappingURL=serialize.js.map
