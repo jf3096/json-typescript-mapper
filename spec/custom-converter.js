@@ -33,6 +33,7 @@ var Student = (function () {
     ], Student.prototype, "dateOfBirth", void 0);
     return Student;
 }());
+//TODO put in main test file where serialization is tested
 describe('custom-converter', function () {
     it('should use the custom converter if available for deserialization', function () {
         var json = {
@@ -43,7 +44,6 @@ describe('custom-converter', function () {
         chai_1.expect(student.name).to.be.equals('Mark');
         chai_1.expect(student.dateOfBirth).to.be.instanceof(Date);
     });
-    //TODO serialize test
 });
 describe('serialize', function () {
     it('should use the property name given in the meta data', function () {
@@ -134,8 +134,31 @@ describe('serialize', function () {
         chai_1.expect(serializedInstance.name).to.equal('John');
         chai_1.expect(serializedInstance.lastName).to.be.undefined;
     });
-    //TODO test exclude
-    //TODO test deep serialization
+    it('should work recursively if clazz is specified in meta data', function () {
+        var OtherClass = (function () {
+            function OtherClass() {
+                this.date = new Date();
+            }
+            __decorate([
+                index_1.JsonProperty({ name: 'date', customConverter: dateConverter }), 
+                __metadata('design:type', Date)
+            ], OtherClass.prototype, "date", void 0);
+            return OtherClass;
+        }());
+        var ClassWithClassProp = (function () {
+            function ClassWithClassProp() {
+                this.other = new OtherClass();
+            }
+            __decorate([
+                index_1.JsonProperty({ name: 'other', clazz: OtherClass }), 
+                __metadata('design:type', OtherClass)
+            ], ClassWithClassProp.prototype, "other", void 0);
+            return ClassWithClassProp;
+        }());
+        var instance = new ClassWithClassProp();
+        var serializedInstance = index_1.serialize(instance);
+        chai_1.expect(serializedInstance.other.date).to.equal('some-date');
+    });
     //TODO test with Arrays
 });
 //# sourceMappingURL=custom-converter.js.map

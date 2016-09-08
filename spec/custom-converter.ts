@@ -23,6 +23,8 @@ class Student {
     constructor() {}
 }
 
+
+//TODO put in main test file where serialization is tested
 describe('custom-converter', function () {
 
     it('should use the custom converter if available for deserialization', function () {
@@ -34,8 +36,6 @@ describe('custom-converter', function () {
         expect(student.name).to.be.equals('Mark');
         expect(student.dateOfBirth).to.be.instanceof(Date);
     });
-
-    //TODO serialize test
 
 });
 
@@ -106,9 +106,19 @@ describe('serialize', function () {
         expect(serializedInstance.lastName).to.be.undefined;
     });
 
-    //TODO test exclude
-
-    //TODO test deep serialization
+    it('should work recursively if clazz is specified in meta data', function () {
+        class OtherClass {
+            @JsonProperty({name: 'date', customConverter: dateConverter})
+            date: Date = new Date();
+        }
+        class ClassWithClassProp {
+            @JsonProperty({ name: 'other', clazz: OtherClass})
+            other: OtherClass = new OtherClass();
+        }
+        const instance = new ClassWithClassProp();
+        const serializedInstance = serialize(instance);
+        expect(serializedInstance.other.date).to.equal('some-date');
+    });
 
     //TODO test with Arrays
 
