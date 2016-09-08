@@ -10,41 +10,40 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var chai_1 = require('chai');
 var index_1 = require('../index');
-var dateConverter = {
-    fromJson: function (data) {
-        return new Date(data);
-    },
-    toJson: function (data) {
-        return 'some-date';
-    }
-};
-var Student = (function () {
-    function Student() {
-        this.name = undefined;
-        this.dateOfBirth = undefined;
-    }
-    __decorate([
-        index_1.JsonProperty('Name'), 
-        __metadata('design:type', String)
-    ], Student.prototype, "name", void 0);
-    __decorate([
-        index_1.JsonProperty({ customConverter: dateConverter }), 
-        __metadata('design:type', Date)
-    ], Student.prototype, "dateOfBirth", void 0);
-    return Student;
-}());
+var dateconverter_1 = require('./common/dateconverter');
+// const dateConverter: ICustomConverter = {
+//     fromJson(data: any): any {
+//         return new Date(data);
+//     },
+//
+//     toJson(data: any): any {
+//         return 'some-date';
+//     }
+// };
+// class Student {
+//
+//     @JsonProperty('Name')
+//     name: string = undefined;
+//
+//     @JsonProperty({customConverter: dateConverter})
+//     dateOfBirth: Date = undefined;
+//
+//     constructor() {}
+// }
 //TODO put in main test file where deserialization is tested
-describe('custom-converter', function () {
-    it('should use the custom converter if available for deserialization', function () {
-        var json = {
-            "Name": "Mark",
-            dateOfBirth: "1995-11-10"
-        };
-        var student = index_1.deserialize(Student, json);
-        chai_1.expect(student.name).to.be.equals('Mark');
-        chai_1.expect(student.dateOfBirth).to.be.instanceof(Date);
-    });
-});
+// describe('custom-converter', function () {
+//
+//     it('should use the custom converter if available for deserialization', function () {
+//         const json = {
+//             "Name": "Mark",
+//             dateOfBirth: "1995-11-10"
+//         };
+//         const student = deserialize(Student, json);
+//         expect(student.name).to.be.equals('Mark');
+//         expect(student.dateOfBirth).to.be.instanceof(Date);
+//     });
+//
+// });
 describe('serialize', function () {
     it('should use the property name given in the meta data', function () {
         var ClassWithPrimitiveProp = (function () {
@@ -104,7 +103,7 @@ describe('serialize', function () {
                 this.date = new Date();
             }
             __decorate([
-                index_1.JsonProperty({ name: 'date', customConverter: dateConverter }), 
+                index_1.JsonProperty({ name: 'date', customConverter: dateconverter_1.default }), 
                 __metadata('design:type', Date)
             ], ClassWithCustomConv.prototype, "date", void 0);
             return ClassWithCustomConv;
@@ -140,7 +139,7 @@ describe('serialize', function () {
                 this.date = new Date();
             }
             __decorate([
-                index_1.JsonProperty({ name: 'date', customConverter: dateConverter }), 
+                index_1.JsonProperty({ name: 'date', customConverter: dateconverter_1.default }), 
                 __metadata('design:type', Date)
             ], OtherClass.prototype, "date", void 0);
             return OtherClass;
@@ -184,7 +183,7 @@ describe('serialize', function () {
                     this.date = new Date();
                 }
                 __decorate([
-                    index_1.JsonProperty({ name: 'date', customConverter: dateConverter }), 
+                    index_1.JsonProperty({ name: 'date', customConverter: dateconverter_1.default }), 
                     __metadata('design:type', Date)
                 ], OtherClass.prototype, "date", void 0);
                 return OtherClass;
