@@ -24,7 +24,7 @@ class Student {
 }
 
 
-//TODO put in main test file where serialization is tested
+//TODO put in main test file where deserialization is tested
 describe('custom-converter', function () {
 
     it('should use the custom converter if available for deserialization', function () {
@@ -120,6 +120,36 @@ describe('serialize', function () {
         expect(serializedInstance.other.date).to.equal('some-date');
     });
 
-    //TODO test with Arrays
+    describe('Arrays', () => {
+        it('should keep as is if no clazz is specified', function () {
+            class ClassWithArrayProp {
+                @JsonProperty('items')
+                items: Array<Date> = [new Date(), new Date()];
+            }
+            const instance = new ClassWithArrayProp();
+            const serializedInstance = serialize(instance);
+            expect(serializedInstance.items).to.be.instanceof(Array);
+            expect(serializedInstance.items.length).to.equal(2);
+            expect(serializedInstance.items[0]).to.equal(instance.items[0]);
+            expect(serializedInstance.items[1]).to.equal(instance.items[1]);
+        });
+
+        it('should apply serialize for all array items if clazz is specified', function () {
+            class OtherClass {
+                @JsonProperty({name: 'date', customConverter: dateConverter})
+                date: Date = new Date();
+            }
+            class ClassWithArrayProp {
+                @JsonProperty({name: 'items', clazz: OtherClass})
+                items: Array<OtherClass> = [new OtherClass(), new OtherClass()];
+            }
+            const instance = new ClassWithArrayProp();
+            const serializedInstance = serialize(instance);
+            expect(serializedInstance.items).to.be.instanceof(Array);
+            expect(serializedInstance.items.length).to.equal(2);
+            expect(serializedInstance.items[0].date).to.equal('some-date');
+            expect(serializedInstance.items[1].date).to.equal('some-date');
+        });
+    });
 
 });

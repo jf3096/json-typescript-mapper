@@ -33,7 +33,7 @@ var Student = (function () {
     ], Student.prototype, "dateOfBirth", void 0);
     return Student;
 }());
-//TODO put in main test file where serialization is tested
+//TODO put in main test file where deserialization is tested
 describe('custom-converter', function () {
     it('should use the custom converter if available for deserialization', function () {
         var json = {
@@ -159,6 +159,53 @@ describe('serialize', function () {
         var serializedInstance = index_1.serialize(instance);
         chai_1.expect(serializedInstance.other.date).to.equal('some-date');
     });
-    //TODO test with Arrays
+    describe('Arrays', function () {
+        it('should keep as is if no clazz is specified', function () {
+            var ClassWithArrayProp = (function () {
+                function ClassWithArrayProp() {
+                    this.items = [new Date(), new Date()];
+                }
+                __decorate([
+                    index_1.JsonProperty('items'), 
+                    __metadata('design:type', Array)
+                ], ClassWithArrayProp.prototype, "items", void 0);
+                return ClassWithArrayProp;
+            }());
+            var instance = new ClassWithArrayProp();
+            var serializedInstance = index_1.serialize(instance);
+            chai_1.expect(serializedInstance.items).to.be.instanceof(Array);
+            chai_1.expect(serializedInstance.items.length).to.equal(2);
+            chai_1.expect(serializedInstance.items[0]).to.equal(instance.items[0]);
+            chai_1.expect(serializedInstance.items[1]).to.equal(instance.items[1]);
+        });
+        it('should apply serialize for all array items if clazz is specified', function () {
+            var OtherClass = (function () {
+                function OtherClass() {
+                    this.date = new Date();
+                }
+                __decorate([
+                    index_1.JsonProperty({ name: 'date', customConverter: dateConverter }), 
+                    __metadata('design:type', Date)
+                ], OtherClass.prototype, "date", void 0);
+                return OtherClass;
+            }());
+            var ClassWithArrayProp = (function () {
+                function ClassWithArrayProp() {
+                    this.items = [new OtherClass(), new OtherClass()];
+                }
+                __decorate([
+                    index_1.JsonProperty({ name: 'items', clazz: OtherClass }), 
+                    __metadata('design:type', Array)
+                ], ClassWithArrayProp.prototype, "items", void 0);
+                return ClassWithArrayProp;
+            }());
+            var instance = new ClassWithArrayProp();
+            var serializedInstance = index_1.serialize(instance);
+            chai_1.expect(serializedInstance.items).to.be.instanceof(Array);
+            chai_1.expect(serializedInstance.items.length).to.equal(2);
+            chai_1.expect(serializedInstance.items[0].date).to.equal('some-date');
+            chai_1.expect(serializedInstance.items[1].date).to.equal('some-date');
+        });
+    });
 });
 //# sourceMappingURL=custom-converter.js.map
