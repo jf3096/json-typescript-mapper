@@ -148,19 +148,10 @@ function deserialize(Clazz, json) {
     return instance;
 }
 exports.deserialize = deserialize;
-//TODO only recursive if clazz is given in metadata
-//TODO also for arrays
-//TODO and probably remove unnecessary noConversion option
 function serialize(instance) {
     if (!utils_1.isTargetType(instance, 'object') || utils_1.isArrayOrArrayClass(instance)) {
         return instance;
     }
-    // if (isPrimitiveOrPrimitiveClass(instance)) {
-    //     return instance;
-    // }
-    // if (isArrayOrArrayClass(instance)) {
-    //     return instance.map(instanceArr => serialize(instanceArr));
-    // }
     var obj = {};
     Object.keys(instance).forEach(function (key) {
         var metadata = getJsonProperty(instance, key);
@@ -182,9 +173,6 @@ function serializeProperty(metadata, prop) {
     if (utils_1.isArrayOrArrayClass(prop)) {
         return prop.map(function (propItem) { return serialize(propItem); });
     }
-    // if (!isPrimitiveOrPrimitiveClass(prop)) {
     return serialize(prop);
-    // }
-    // return prop;
 }
 //# sourceMappingURL=index.js.map

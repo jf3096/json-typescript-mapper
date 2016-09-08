@@ -24,7 +24,6 @@ export interface IDecoratorMetaData<T> {
     clazz?: {new(): T},
     customConverter?: ICustomConverter,
     excludeToJson?: boolean
-    // noConversion?: boolean
 }
 
 /**
@@ -178,22 +177,11 @@ export function deserialize<T>(Clazz: {new(): T}, json: Object): T {
     return instance;
 }
 
-//TODO only recursive if clazz is given in metadata
-//TODO also for arrays
-//TODO and probably remove unnecessary noConversion option
 export function serialize(instance: any): any {
 
     if (!isTargetType(instance, 'object') || isArrayOrArrayClass(instance)) {
         return instance;
     }
-
-    // if (isPrimitiveOrPrimitiveClass(instance)) {
-    //     return instance;
-    // }
-
-    // if (isArrayOrArrayClass(instance)) {
-    //     return instance.map(instanceArr => serialize(instanceArr));
-    // }
 
     const obj = {};
     Object.keys(instance).forEach(key => {
@@ -221,9 +209,5 @@ function serializeProperty(metadata: IDecoratorMetaData<any>, prop: any): any {
         return prop.map(propItem => serialize(propItem));
     }
 
-    // if (!isPrimitiveOrPrimitiveClass(prop)) {
     return serialize(prop);
-    // }
-
-    // return prop;
 }

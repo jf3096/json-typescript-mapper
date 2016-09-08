@@ -11,39 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var chai_1 = require('chai');
 var index_1 = require('../index');
 var dateconverter_1 = require('./common/dateconverter');
-// const dateConverter: ICustomConverter = {
-//     fromJson(data: any): any {
-//         return new Date(data);
-//     },
-//
-//     toJson(data: any): any {
-//         return 'some-date';
-//     }
-// };
-// class Student {
-//
-//     @JsonProperty('Name')
-//     name: string = undefined;
-//
-//     @JsonProperty({customConverter: dateConverter})
-//     dateOfBirth: Date = undefined;
-//
-//     constructor() {}
-// }
-//TODO put in main test file where deserialization is tested
-// describe('custom-converter', function () {
-//
-//     it('should use the custom converter if available for deserialization', function () {
-//         const json = {
-//             "Name": "Mark",
-//             dateOfBirth: "1995-11-10"
-//         };
-//         const student = deserialize(Student, json);
-//         expect(student.name).to.be.equals('Mark');
-//         expect(student.dateOfBirth).to.be.instanceof(Date);
-//     });
-//
-// });
 describe('serialize', function () {
     it('should use the property name given in the meta data', function () {
         var ClassWithPrimitiveProp = (function () {
