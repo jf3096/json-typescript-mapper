@@ -6,7 +6,7 @@ class Student {
     @JsonProperty('name')
     fullName: string;
 
-    @JsonProperty({name: 'dateOfBirth', customConverter: dateConverter})
+    @JsonProperty({name: 'dob', customConverter: dateConverter})
     dateOfBirth: Date = undefined;
 
     constructor() {
@@ -176,10 +176,11 @@ describe('index()', function () {
     it('should use a custom converter if available', function () {
         const json = {
             "name": "John Doe",
-            dateOfBirth: "1995-11-10"
+            dob: "1995-11-10"
         };
         const student = deserialize(Student, json);
         expect(student.fullName).to.be.equals('John Doe');
         expect(student.dateOfBirth).to.be.instanceof(Date);
+        expect(student.dateOfBirth.toString()).to.equal(new Date("1995-11-10").toString());
     });
 });

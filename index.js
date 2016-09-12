@@ -139,7 +139,7 @@ function deserialize(Clazz, json) {
          * pass value to instance
          */
         if (decoratorMetaData && decoratorMetaData.customConverter) {
-            instance[key] = decoratorMetaData.customConverter.fromJson(json[key]);
+            instance[key] = decoratorMetaData.customConverter.fromJson(json[decoratorMetaData.name || key]);
         }
         else {
             instance[key] = decoratorMetaData ? mapFromJson(decoratorMetaData, instance, json, key) : json[key];
