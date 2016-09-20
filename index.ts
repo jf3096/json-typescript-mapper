@@ -1,5 +1,16 @@
 import 'reflect-metadata';
 import {isTargetType, isPrimitiveOrPrimitiveClass, isArrayOrArrayClass} from './libs/utils';
+import {IDecoratorMetaData} from './';
+
+/**
+ * provide interface to indicate the object is allowed to be traversed
+ *
+ * @interface
+ */
+export interface IGenericObject {
+    [key: string]: any;
+}
+
 
 /**
  * Decorator variable name
@@ -40,10 +51,10 @@ class DecoratorMetaData<T> {
  * @return {(target:Object, targetKey:string | symbol)=> void} decorator function
  */
 export function JsonProperty<T>(metadata?: IDecoratorMetaData<T>|string): (target: Object, targetKey: string | symbol)=> void {
-    let decoratorMetaData;
+    let decoratorMetaData: IDecoratorMetaData<T>;
 
     if (isTargetType(metadata, 'string')) {
-        decoratorMetaData = new DecoratorMetaData(metadata as string);
+        decoratorMetaData = new DecoratorMetaData<T>(metadata as string);
     }
     else if (isTargetType(metadata, 'object')) {
         decoratorMetaData = metadata as IDecoratorMetaData<T>;
@@ -89,23 +100,23 @@ function getJsonProperty<T>(target: any, propertyKey: string): IDecoratorMetaDat
  * @return {IDecoratorMetaData<T>} check if any arguments is null or undefined
  */
 function hasAnyNullOrUndefined(...args: any[]) {
-    return args.some((arg: any)=>arg === null || arg === undefined);
+    return args.some((arg: any) => arg === null || arg === undefined);
 }
 
 
-function mapFromJson<T>(decoratorMetadata: IDecoratorMetaData<any>, instance: T, json: Object, key: any): any {
+function mapFromJson<T>(decoratorMetadata: IDecoratorMetaData<any>, instance: T, json: IGenericObject, key: any): any {
     /**
      * if decorator name is not found, use target property key as decorator name. It means mapping it directly
      */
     let decoratorName = decoratorMetadata.name || key;
-    let innerJson = json ? json[decoratorName] : undefined;
+    let innerJson: any = json ? json[decoratorName] : undefined;
     let clazz = getClazz(instance, key);
     if (isArrayOrArrayClass(clazz)) {
         let metadata = getJsonProperty(instance, key);
         if (metadata && metadata.clazz || isPrimitiveOrPrimitiveClass(clazz)) {
             if (innerJson && isArrayOrArrayClass(innerJson)) {
                 return innerJson.map(
-                    (item)=> deserialize(metadata.clazz, item)
+                    (item: any) => deserialize(metadata.clazz, item)
                 );
             }
             return;
@@ -130,7 +141,7 @@ function mapFromJson<T>(decoratorMetadata: IDecoratorMetaData<any>, instance: T,
  *
  * @return {T} return mapped object
  */
-export function deserialize<T>(Clazz: {new(): T}, json: Object): T {
+export function deserialize<T extends IGenericObject>(Clazz: {new(): T}, json: IGenericObject): T {
     /**
      * As it is a recursive function, ignore any arguments that are unset
      */
@@ -149,7 +160,7 @@ export function deserialize<T>(Clazz: {new(): T}, json: Object): T {
      */
     let instance = new Clazz();
 
-    Object.keys(instance).forEach((key: any) => {
+    Object.keys(instance).forEach((key: string) => {
         /**
          * get decoratorMetaData, structure: { name?:string, clazz?:{ new():T } }
          */
