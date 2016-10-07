@@ -10,14 +10,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var chai_1 = require('chai');
 var index_1 = require('../index');
+var dateconverter_1 = require('./common/dateconverter');
 var Student = (function () {
     function Student() {
+        this.dateOfBirth = undefined;
         this.fullName = void 0;
     }
     __decorate([
         index_1.JsonProperty('name'), 
         __metadata('design:type', String)
     ], Student.prototype, "fullName", void 0);
+    __decorate([
+        index_1.JsonProperty({ name: 'dob', customConverter: dateconverter_1.default }), 
+        __metadata('design:type', Date)
+    ], Student.prototype, "dateOfBirth", void 0);
     return Student;
 }());
 var Address = (function () {
@@ -177,6 +183,16 @@ describe('index()', function () {
         };
         var person = index_1.deserialize(Person, json);
         chai_1.expect(person.name).to.be.equals(void 0);
+    });
+    it('should use a custom converter if available', function () {
+        var json = {
+            "name": "John Doe",
+            dob: "1995-11-10"
+        };
+        var student = index_1.deserialize(Student, json);
+        chai_1.expect(student.fullName).to.be.equals('John Doe');
+        chai_1.expect(student.dateOfBirth).to.be.instanceof(Date);
+        chai_1.expect(student.dateOfBirth.toString()).to.equal(new Date("1995-11-10").toString());
     });
 });
 //# sourceMappingURL=index.js.map

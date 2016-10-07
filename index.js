@@ -138,9 +138,41 @@ function deserialize(Clazz, json) {
         /**
          * pass value to instance
          */
-        instance[key] = decoratorMetaData ? mapFromJson(decoratorMetaData, instance, json, key) : json[key];
+        if (decoratorMetaData && decoratorMetaData.customConverter) {
+            instance[key] = decoratorMetaData.customConverter.fromJson(json[decoratorMetaData.name || key]);
+        }
+        else {
+            instance[key] = decoratorMetaData ? mapFromJson(decoratorMetaData, instance, json, key) : json[key];
+        }
     });
     return instance;
 }
 exports.deserialize = deserialize;
+function serialize(instance) {
+    if (!utils_1.isTargetType(instance, 'object') || utils_1.isArrayOrArrayClass(instance)) {
+        return instance;
+    }
+    var obj = {};
+    Object.keys(instance).forEach(function (key) {
+        var metadata = getJsonProperty(instance, key);
+        obj[metadata && metadata.name ? metadata.name : key] = serializeProperty(metadata, instance[key]);
+    });
+    return obj;
+}
+exports.serialize = serialize;
+function serializeProperty(metadata, prop) {
+    if (!metadata || metadata.excludeToJson === true) {
+        return;
+    }
+    if (metadata.customConverter) {
+        return metadata.customConverter.toJson(prop);
+    }
+    if (!metadata.clazz) {
+        return prop;
+    }
+    if (utils_1.isArrayOrArrayClass(prop)) {
+        return prop.map(function (propItem) { return serialize(propItem); });
+    }
+    return serialize(prop);
+}
 //# sourceMappingURL=index.js.map
