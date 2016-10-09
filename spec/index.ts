@@ -58,8 +58,8 @@ describe('index()', function () {
             "Name": "Mark",
             "xing": "Galea",
             "age": 30,
-            "AddressArr": [],
-            "Address": null
+            "AddressArr": [] as Array<any>,
+            "Address": null as any
         };
         const person = deserialize(Person, json);
         expect(person.address).to.be.equals(void 0);
@@ -136,32 +136,32 @@ describe('index()', function () {
     });
 
     it('empty json object #2', function () {
-        let json = null;
+        let json: any = null;
         const person = deserialize(Person, json);
         expect(person).to.be.equals(void 0);
     });
 
     it('empty json object #3', function () {
-        let json = void 0;
+        let json: any = void 0;
         const person = deserialize(Person, json);
         expect(person).to.be.equals(void 0);
     });
 
     it('invalid primitive value #1', function () {
         let json = 123;
-        const person = deserialize(Person, json);
+        const person = deserialize(Person, json as any);
         expect(person).to.be.equals(void 0);
     });
 
     it('invalid primitive value #2', function () {
         let json = '';
-        const person = deserialize(Person, json);
+        const person = deserialize(Person, json as any);
         expect(person).to.be.equals(void 0);
     });
 
     it('invalid primitive value #3', function () {
         let json = NaN;
-        const person = deserialize(Person, json);
+        const person = deserialize(Person, json as any);
         expect(person).to.be.equals(void 0);
     });
 
