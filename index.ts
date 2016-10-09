@@ -194,7 +194,7 @@ export function serialize(instance: any): any {
         return instance;
     }
 
-    const obj = {};
+    const obj: any = {};
     Object.keys(instance).forEach(key => {
         const metadata = getJsonProperty(instance, key);
         obj[metadata && metadata.name ? metadata.name : key] = serializeProperty(metadata, instance[key]);
@@ -217,7 +217,7 @@ function serializeProperty(metadata: IDecoratorMetaData<any>, prop: any): any {
     }
 
     if (isArrayOrArrayClass(prop)) {
-        return prop.map(propItem => serialize(propItem));
+        return prop.map((propItem: any) => serialize(propItem));
     }
 
     return serialize(prop);
