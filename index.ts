@@ -19,6 +19,11 @@ export interface IGenericObject {
  */
 const JSON_META_DATA_KEY = 'JsonProperty';
 
+/**
+ * When custom mapping of a property is required.
+ *
+ * @interface
+ */
 export interface ICustomConverter {
     fromJson(data: any): any;
     toJson(data: any): any;
@@ -29,6 +34,8 @@ export interface ICustomConverter {
  * DecoratorConstraint
  *
  * @interface
+ * @property {ICustomConverter} customConverter, will be used for mapping the property, if specified
+ * @property {boolean} excludeToJson, will exclude the property for serialization, if true
  */
 export interface IDecoratorMetaData<T> {
     name?: string,
@@ -188,6 +195,13 @@ export function deserialize<T extends IGenericObject>(Clazz: {new(): T}, json: I
     return instance;
 }
 
+/**
+ * Serialize: Creates a ready-for-json-serialization object from the provided model instance.
+ * Only @JsonProperty decorated properties in the model instance are processed.
+ *
+ * @param instance an instance of a model class
+ * @returns {any} an object ready to be serialized to JSON
+ */
 export function serialize(instance: any): any {
 
     if (!isTargetType(instance, 'object') || isArrayOrArrayClass(instance)) {
@@ -202,6 +216,13 @@ export function serialize(instance: any): any {
     return obj;
 }
 
+/**
+ * Prepare a single property to be serialized to JSON.
+ *
+ * @param metadata
+ * @param prop
+ * @returns {any}
+ */
 function serializeProperty(metadata: IDecoratorMetaData<any>, prop: any): any {
 
     if (!metadata || metadata.excludeToJson === true) {

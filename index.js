@@ -148,6 +148,13 @@ function deserialize(Clazz, json) {
     return instance;
 }
 exports.deserialize = deserialize;
+/**
+ * Serialize: Creates a ready-for-json-serialization object from the provided model instance.
+ * Only @JsonProperty decorated properties in the model instance are processed.
+ *
+ * @param instance an instance of a model class
+ * @returns {any} an object ready to be serialized to JSON
+ */
 function serialize(instance) {
     if (!utils_1.isTargetType(instance, 'object') || utils_1.isArrayOrArrayClass(instance)) {
         return instance;
@@ -160,6 +167,13 @@ function serialize(instance) {
     return obj;
 }
 exports.serialize = serialize;
+/**
+ * Prepare a single property to be serialized to JSON.
+ *
+ * @param metadata
+ * @param prop
+ * @returns {any}
+ */
 function serializeProperty(metadata, prop) {
     if (!metadata || metadata.excludeToJson === true) {
         return;
