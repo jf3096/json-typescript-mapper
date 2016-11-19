@@ -1,9 +1,13 @@
 import {expect} from 'chai';
 import {deserialize, JsonProperty} from '../index';
+import dateConverter from './common/dateconverter'
 
 class Student {
     @JsonProperty('name')
     fullName: string;
+
+    @JsonProperty({name: 'dob', customConverter: dateConverter})
+    dateOfBirth: Date = undefined;
 
     constructor() {
         this.fullName = void 0;
@@ -167,5 +171,16 @@ describe('index()', function () {
         };
         const person = deserialize(Person, json);
         expect(person.name).to.be.equals(void 0);
+    });
+
+    it('should use a custom converter if available', function () {
+        const json = {
+            "name": "John Doe",
+            dob: "1995-11-10"
+        };
+        const student = deserialize(Student, json);
+        expect(student.fullName).to.be.equals('John Doe');
+        expect(student.dateOfBirth).to.be.instanceof(Date);
+        expect(student.dateOfBirth.toString()).to.equal(new Date("1995-11-10").toString());
     });
 });
