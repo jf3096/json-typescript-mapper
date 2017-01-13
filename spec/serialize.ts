@@ -7,7 +7,7 @@ describe('serialize', function () {
     it('should use the property name given in the meta data', function () {
         class ClassWithPrimitiveProp {
             @JsonProperty('theName')
-            name: string = undefined;
+            name?: string = undefined;
         }
         const instance = new ClassWithPrimitiveProp();
         instance.name  = 'Jim';

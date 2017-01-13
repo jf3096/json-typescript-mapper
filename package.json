@@ -9,7 +9,8 @@
   },
   "devDependencies": {
     "chai": "~1.8.0",
-    "mocha": "2.0.1"
+    "mocha": "2.0.1",
+    "typescript": "^2.1.5"
   },
   "scripts": {
     "test": "mocha ./spec/*.js",
