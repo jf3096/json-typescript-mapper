@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import {isTargetType, isPrimitiveOrPrimitiveClass, isArrayOrArrayClass} from './libs/utils';
-import {IDecoratorMetaData} from './';
 
 /**
  * provide interface to indicate the object is allowed to be traversed
