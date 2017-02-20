@@ -153,11 +153,11 @@ therefore I updated all null value to void 0 which is a better expression than u
 Most cases it won't affect previous version at all.
 
 ## Contributor
-@dankmo
+[@dankmo](https://github.com/dankmo)
 
 ## ChangeLog
 #### 2017-02-20
 
-**json-typescript-mapper** 1.1.0
+**json-typescript-mapper** 1.1.1
 - Added serialized function
 - Passed more unit tests
