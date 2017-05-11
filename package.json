@@ -34,5 +34,6 @@
   "bugs": {
     "url": "https://github.com/jf3096/json-typescript-mapper/issues"
   },
-  "homepage": "https://github.com/jf3096/json-typescript-mapper#readme"
+  "homepage": "https://github.com/jf3096/json-typescript-mapper#readme",
+  "types": "index.d.ts"
 }
