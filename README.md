@@ -1,5 +1,7 @@
 # json-typescript-mapper
 
+[![npm](https://img.shields.io/npm/v/json-typescript-mapper.svg)](https://www.npmjs.com/package/json-typescript-mapper)
+
 ## Introduction
 
 For single page application, data sources are obtained from API server. Instead of directly using api data, we 
