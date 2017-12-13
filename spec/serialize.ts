@@ -10,7 +10,7 @@ describe('serialize', function () {
             name?: string = undefined;
         }
         const instance = new ClassWithPrimitiveProp();
-        instance.name  = 'Jim';
+        instance.name = 'Jim';
         const serializedInstance = serialize(instance);
         expect(serializedInstance.theName).to.equal('Jim');
     });
@@ -31,7 +31,6 @@ describe('serialize', function () {
                 expect(serializedInstance.someProp).to.equal(primitiveType);
             });
         });
-
     });
 
     it('should keep unspecified objects as is', function () {
@@ -59,7 +58,7 @@ describe('serialize', function () {
             @JsonProperty('name')
             name: string = 'John';
 
-            @JsonProperty({ name: 'lastName', excludeToJson: true})
+            @JsonProperty({name: 'lastName', excludeToJson: true})
             lastName: string = 'Doe';
         }
         const instance = new ClassWithExcludedProp();
@@ -74,7 +73,7 @@ describe('serialize', function () {
             date: Date = new Date();
         }
         class ClassWithClassProp {
-            @JsonProperty({ name: 'other', clazz: OtherClass})
+            @JsonProperty({name: 'other', clazz: OtherClass})
             other: OtherClass = new OtherClass();
         }
         const instance = new ClassWithClassProp();
@@ -113,5 +112,4 @@ describe('serialize', function () {
             expect(serializedInstance.items[1].date).to.equal('some-date');
         });
     });
-
 });
