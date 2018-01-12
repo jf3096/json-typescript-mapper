@@ -16,4 +16,3 @@ function isArrayOrArrayClass(clazz) {
     return Object.prototype.toString.call(clazz) === '[object Array]';
 }
 exports.isArrayOrArrayClass = isArrayOrArrayClass;
-//# sourceMappingURL=utils.js.map
