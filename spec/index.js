@@ -8,25 +8,26 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var chai_1 = require('chai');
-var index_1 = require('../index');
-var dateconverter_1 = require('./common/dateconverter');
-var Student = (function () {
+Object.defineProperty(exports, "__esModule", { value: true });
+var chai_1 = require("chai");
+var index_1 = require("../index");
+var dateconverter_1 = require("./common/dateconverter");
+var Student = /** @class */ (function () {
     function Student() {
         this.dateOfBirth = undefined;
         this.fullName = void 0;
     }
     __decorate([
-        index_1.JsonProperty('name'), 
-        __metadata('design:type', String)
+        index_1.JsonProperty('name'),
+        __metadata("design:type", String)
     ], Student.prototype, "fullName", void 0);
     __decorate([
-        index_1.JsonProperty({ name: 'dob', customConverter: dateconverter_1.default }), 
-        __metadata('design:type', Date)
+        index_1.JsonProperty({ name: 'dob', customConverter: dateconverter_1.default }),
+        __metadata("design:type", Date)
     ], Student.prototype, "dateOfBirth", void 0);
     return Student;
 }());
-var Address = (function () {
+var Address = /** @class */ (function () {
     function Address() {
         this.firstLine = void 0;
         this.secondLine = void 0;
@@ -34,20 +35,20 @@ var Address = (function () {
         this.student = void 0;
     }
     __decorate([
-        index_1.JsonProperty('first-line'), 
-        __metadata('design:type', String)
+        index_1.JsonProperty('first-line'),
+        __metadata("design:type", String)
     ], Address.prototype, "firstLine", void 0);
     __decorate([
-        index_1.JsonProperty('second-line'), 
-        __metadata('design:type', String)
+        index_1.JsonProperty('second-line'),
+        __metadata("design:type", String)
     ], Address.prototype, "secondLine", void 0);
     __decorate([
-        index_1.JsonProperty({ clazz: Student }), 
-        __metadata('design:type', Student)
+        index_1.JsonProperty({ clazz: Student }),
+        __metadata("design:type", Student)
     ], Address.prototype, "student", void 0);
     return Address;
 }());
-var Person = (function () {
+var Person = /** @class */ (function () {
     function Person() {
         this.name = void 0;
         this.surname = void 0;
@@ -56,20 +57,20 @@ var Person = (function () {
         this.address = void 0;
     }
     __decorate([
-        index_1.JsonProperty('Name'), 
-        __metadata('design:type', String)
+        index_1.JsonProperty('Name'),
+        __metadata("design:type", String)
     ], Person.prototype, "name", void 0);
     __decorate([
-        index_1.JsonProperty('xing'), 
-        __metadata('design:type', String)
+        index_1.JsonProperty('xing'),
+        __metadata("design:type", String)
     ], Person.prototype, "surname", void 0);
     __decorate([
-        index_1.JsonProperty({ clazz: Address, name: 'AddressArr' }), 
-        __metadata('design:type', Array)
+        index_1.JsonProperty({ clazz: Address, name: 'AddressArr' }),
+        __metadata("design:type", Array)
     ], Person.prototype, "addressArr", void 0);
     __decorate([
-        index_1.JsonProperty({ clazz: Address, name: 'Address' }), 
-        __metadata('design:type', Address)
+        index_1.JsonProperty({ clazz: Address, name: 'Address' }),
+        __metadata("design:type", Address)
     ], Person.prototype, "address", void 0);
     return Person;
 }());

@@ -8,18 +8,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var chai_1 = require('chai');
-var index_1 = require('../index');
-var dateconverter_1 = require('./common/dateconverter');
+Object.defineProperty(exports, "__esModule", { value: true });
+var chai_1 = require("chai");
+var index_1 = require("../index");
+var dateconverter_1 = require("./common/dateconverter");
 describe('serialize', function () {
     it('should use the property name given in the meta data', function () {
-        var ClassWithPrimitiveProp = (function () {
+        var ClassWithPrimitiveProp = /** @class */ (function () {
             function ClassWithPrimitiveProp() {
                 this.name = undefined;
             }
             __decorate([
-                index_1.JsonProperty('theName'), 
-                __metadata('design:type', String)
+                index_1.JsonProperty('theName'),
+                __metadata("design:type", String)
             ], ClassWithPrimitiveProp.prototype, "name", void 0);
             return ClassWithPrimitiveProp;
         }());
@@ -32,13 +33,13 @@ describe('serialize', function () {
         var primitiveTypes = ['some-string', true, 25, new Number(25), new Boolean(true)];
         primitiveTypes.forEach(function (primitiveType) {
             it("should keep " + typeof primitiveType + " as is", function () {
-                var PrimitiveProp = (function () {
+                var PrimitiveProp = /** @class */ (function () {
                     function PrimitiveProp() {
                         this.someProp = primitiveType;
                     }
                     __decorate([
-                        index_1.JsonProperty('someProp'), 
-                        __metadata('design:type', Object)
+                        index_1.JsonProperty('someProp'),
+                        __metadata("design:type", Object)
                     ], PrimitiveProp.prototype, "someProp", void 0);
                     return PrimitiveProp;
                 }());
@@ -50,13 +51,13 @@ describe('serialize', function () {
         });
     });
     it('should keep unspecified objects as is', function () {
-        var ClassWithUnspecObject = (function () {
+        var ClassWithUnspecObject = /** @class */ (function () {
             function ClassWithUnspecObject() {
                 this.date = new Date();
             }
             __decorate([
-                index_1.JsonProperty('date'), 
-                __metadata('design:type', Date)
+                index_1.JsonProperty('date'),
+                __metadata("design:type", Date)
             ], ClassWithUnspecObject.prototype, "date", void 0);
             return ClassWithUnspecObject;
         }());
@@ -65,13 +66,13 @@ describe('serialize', function () {
         chai_1.expect(serializedInstance.date).to.equal(instance.date);
     });
     it('should use custom converter if available', function () {
-        var ClassWithCustomConv = (function () {
+        var ClassWithCustomConv = /** @class */ (function () {
             function ClassWithCustomConv() {
                 this.date = new Date();
             }
             __decorate([
-                index_1.JsonProperty({ name: 'date', customConverter: dateconverter_1.default }), 
-                __metadata('design:type', Date)
+                index_1.JsonProperty({ name: 'date', customConverter: dateconverter_1.default }),
+                __metadata("design:type", Date)
             ], ClassWithCustomConv.prototype, "date", void 0);
             return ClassWithCustomConv;
         }());
@@ -80,18 +81,18 @@ describe('serialize', function () {
         chai_1.expect(serializedInstance.date).to.equal('some-date');
     });
     it('should exclude properties if specified', function () {
-        var ClassWithExcludedProp = (function () {
+        var ClassWithExcludedProp = /** @class */ (function () {
             function ClassWithExcludedProp() {
                 this.name = 'John';
                 this.lastName = 'Doe';
             }
             __decorate([
-                index_1.JsonProperty('name'), 
-                __metadata('design:type', String)
+                index_1.JsonProperty('name'),
+                __metadata("design:type", String)
             ], ClassWithExcludedProp.prototype, "name", void 0);
             __decorate([
-                index_1.JsonProperty({ name: 'lastName', excludeToJson: true }), 
-                __metadata('design:type', String)
+                index_1.JsonProperty({ name: 'lastName', excludeToJson: true }),
+                __metadata("design:type", String)
             ], ClassWithExcludedProp.prototype, "lastName", void 0);
             return ClassWithExcludedProp;
         }());
@@ -101,23 +102,23 @@ describe('serialize', function () {
         chai_1.expect(serializedInstance.lastName).to.be.undefined;
     });
     it('should work recursively if clazz is specified in meta data', function () {
-        var OtherClass = (function () {
+        var OtherClass = /** @class */ (function () {
             function OtherClass() {
                 this.date = new Date();
             }
             __decorate([
-                index_1.JsonProperty({ name: 'date', customConverter: dateconverter_1.default }), 
-                __metadata('design:type', Date)
+                index_1.JsonProperty({ name: 'date', customConverter: dateconverter_1.default }),
+                __metadata("design:type", Date)
             ], OtherClass.prototype, "date", void 0);
             return OtherClass;
         }());
-        var ClassWithClassProp = (function () {
+        var ClassWithClassProp = /** @class */ (function () {
             function ClassWithClassProp() {
                 this.other = new OtherClass();
             }
             __decorate([
-                index_1.JsonProperty({ name: 'other', clazz: OtherClass }), 
-                __metadata('design:type', OtherClass)
+                index_1.JsonProperty({ name: 'other', clazz: OtherClass }),
+                __metadata("design:type", OtherClass)
             ], ClassWithClassProp.prototype, "other", void 0);
             return ClassWithClassProp;
         }());
@@ -127,13 +128,13 @@ describe('serialize', function () {
     });
     describe('Arrays', function () {
         it('should keep as is if no clazz is specified', function () {
-            var ClassWithArrayProp = (function () {
+            var ClassWithArrayProp = /** @class */ (function () {
                 function ClassWithArrayProp() {
                     this.items = [new Date(), new Date()];
                 }
                 __decorate([
-                    index_1.JsonProperty('items'), 
-                    __metadata('design:type', Array)
+                    index_1.JsonProperty('items'),
+                    __metadata("design:type", Array)
                 ], ClassWithArrayProp.prototype, "items", void 0);
                 return ClassWithArrayProp;
             }());
@@ -145,23 +146,23 @@ describe('serialize', function () {
             chai_1.expect(serializedInstance.items[1]).to.equal(instance.items[1]);
         });
         it('should apply serialize for all array items if clazz is specified', function () {
-            var OtherClass = (function () {
+            var OtherClass = /** @class */ (function () {
                 function OtherClass() {
                     this.date = new Date();
                 }
                 __decorate([
-                    index_1.JsonProperty({ name: 'date', customConverter: dateconverter_1.default }), 
-                    __metadata('design:type', Date)
+                    index_1.JsonProperty({ name: 'date', customConverter: dateconverter_1.default }),
+                    __metadata("design:type", Date)
                 ], OtherClass.prototype, "date", void 0);
                 return OtherClass;
             }());
-            var ClassWithArrayProp = (function () {
+            var ClassWithArrayProp = /** @class */ (function () {
                 function ClassWithArrayProp() {
                     this.items = [new OtherClass(), new OtherClass()];
                 }
                 __decorate([
-                    index_1.JsonProperty({ name: 'items', clazz: OtherClass }), 
-                    __metadata('design:type', Array)
+                    index_1.JsonProperty({ name: 'items', clazz: OtherClass }),
+                    __metadata("design:type", Array)
                 ], ClassWithArrayProp.prototype, "items", void 0);
                 return ClassWithArrayProp;
             }());
