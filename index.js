@@ -39,7 +39,6 @@ function JsonProperty(metadata) {
         decoratorMetaData = metadata;
     }
     else {
-        // throw new Error('index.ts: meta data in Json property is undefined. meta data: ' + metadata)
         decoratorMetaData = new DecoratorMetaData();
     }
     return Reflect.metadata(JSON_META_DATA_KEY, decoratorMetaData);
@@ -82,6 +81,12 @@ function hasAnyNullOrUndefined() {
     }
     return args.some(function (arg) { return arg === null || arg === undefined; });
 }
+/**
+ * Ensure obj has key, otherwise try to find case-insensitve version of key
+ *
+ * @param obj
+ * @param key
+ */
 function getCaseInsensitiveMatch(obj, key) {
     if (obj.hasOwnProperty(key))
         return key;
@@ -89,7 +94,7 @@ function getCaseInsensitiveMatch(obj, key) {
         var newKey = Object.keys(obj).find(function (i) {
             return key.toUpperCase() === i.toUpperCase();
         });
-        return newKey;
+        return newKey || key;
     }
 }
 function mapFromJson(decoratorMetadata, instance, json, key) {
@@ -151,7 +156,8 @@ function deserialize(Clazz, json) {
          * pass value to instance
          */
         if (decoratorMetaData && decoratorMetaData.customConverter) {
-            instance[key] = decoratorMetaData.customConverter.fromJson(json[decoratorMetaData.name || key]);
+            var jsonKey = getCaseInsensitiveMatch(json, decoratorMetaData.name || key);
+            instance[key] = decoratorMetaData.customConverter.fromJson(json[jsonKey]);
         }
         else {
             instance[key] = decoratorMetaData ? mapFromJson(decoratorMetaData, instance, json, key) : json[key];
