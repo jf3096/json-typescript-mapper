@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 function isTargetType(val, type) {
     return typeof val === type;
 }

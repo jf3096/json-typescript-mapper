@@ -5,7 +5,10 @@
     "sourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "lib": [
+      "es2017"
+    ]
   },
   "exclude": [
     "node_modules"

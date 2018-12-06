@@ -73,7 +73,7 @@ export function JsonProperty<T>(metadata?: IDecoratorMetaData<T>|string): (targe
         decoratorMetaData = metadata as IDecoratorMetaData<T>;
     }
     else {
-        throw new Error('index.ts: meta data in Json property is undefined. meta data: ' + metadata)
+        decoratorMetaData = new DecoratorMetaData<T>();
     }
 
     return Reflect.metadata(JSON_META_DATA_KEY, decoratorMetaData);
@@ -117,12 +117,29 @@ function hasAnyNullOrUndefined(...args: any[]) {
     return args.some((arg: any) => arg === null || arg === undefined);
 }
 
+/**
+ * Ensure obj has key, otherwise try to find case-insensitve version of key
+ * 
+ * @param obj 
+ * @param key 
+ */
+function getCaseInsensitiveMatch(obj: any, key: string): any {
+    if ((obj as Object).hasOwnProperty(key))
+        return key;
+    else {
+        let newKey = Object.keys(obj).find(i => {
+            return key.toUpperCase() === i.toUpperCase();
+        });
+
+        return newKey || key;
+    }
+}
 
 function mapFromJson<T>(decoratorMetadata: IDecoratorMetaData<any>, instance: T, json: IGenericObject, key: any): any {
     /**
      * if decorator name is not found, use target property key as decorator name. It means mapping it directly
      */
-    let decoratorName = decoratorMetadata.name || key;
+    let decoratorName = getCaseInsensitiveMatch(json, decoratorMetadata.name || key);
     let innerJson: any = json ? json[decoratorName] : undefined;
     let clazz = getClazz(instance, key);
     if (isArrayOrArrayClass(clazz)) {
@@ -184,7 +201,9 @@ export function deserialize<T extends IGenericObject>(Clazz: {new(): T}, json: I
          * pass value to instance
          */
         if (decoratorMetaData && decoratorMetaData.customConverter) {
-            instance[key] =  decoratorMetaData.customConverter.fromJson(json[decoratorMetaData.name || key]);
+            let jsonKey = getCaseInsensitiveMatch(json, decoratorMetaData.name || key);
+
+            instance[key] = decoratorMetaData.customConverter.fromJson(json[jsonKey]);
         } else {
             instance[key] = decoratorMetaData ? mapFromJson(decoratorMetaData, instance, json, key) : json[key];
         }

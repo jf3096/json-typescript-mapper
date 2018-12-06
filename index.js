@@ -1,6 +1,7 @@
 "use strict";
-require('reflect-metadata');
-var utils_1 = require('./libs/utils');
+Object.defineProperty(exports, "__esModule", { value: true });
+require("reflect-metadata");
+var utils_1 = require("./libs/utils");
 /**
  * Decorator variable name
  *
@@ -15,7 +16,7 @@ var JSON_META_DATA_KEY = 'JsonProperty';
  * @property {string} name, indicate which json property needed to map
  * @property {string} clazz, if the target is not primitive type, map it to corresponding class
  */
-var DecoratorMetaData = (function () {
+var DecoratorMetaData = /** @class */ (function () {
     function DecoratorMetaData(name, clazz) {
         this.name = name;
         this.clazz = clazz;
@@ -38,7 +39,7 @@ function JsonProperty(metadata) {
         decoratorMetaData = metadata;
     }
     else {
-        throw new Error('index.ts: meta data in Json property is undefined. meta data: ' + metadata);
+        decoratorMetaData = new DecoratorMetaData();
     }
     return Reflect.metadata(JSON_META_DATA_KEY, decoratorMetaData);
 }
@@ -76,15 +77,31 @@ function getJsonProperty(target, propertyKey) {
 function hasAnyNullOrUndefined() {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i - 0] = arguments[_i];
+        args[_i] = arguments[_i];
     }
     return args.some(function (arg) { return arg === null || arg === undefined; });
+}
+/**
+ * Ensure obj has key, otherwise try to find case-insensitve version of key
+ *
+ * @param obj
+ * @param key
+ */
+function getCaseInsensitiveMatch(obj, key) {
+    if (obj.hasOwnProperty(key))
+        return key;
+    else {
+        var newKey = Object.keys(obj).find(function (i) {
+            return key.toUpperCase() === i.toUpperCase();
+        });
+        return newKey || key;
+    }
 }
 function mapFromJson(decoratorMetadata, instance, json, key) {
     /**
      * if decorator name is not found, use target property key as decorator name. It means mapping it directly
      */
-    var decoratorName = decoratorMetadata.name || key;
+    var decoratorName = getCaseInsensitiveMatch(json, decoratorMetadata.name || key);
     var innerJson = json ? json[decoratorName] : undefined;
     var clazz = getClazz(instance, key);
     if (utils_1.isArrayOrArrayClass(clazz)) {
@@ -139,7 +156,8 @@ function deserialize(Clazz, json) {
          * pass value to instance
          */
         if (decoratorMetaData && decoratorMetaData.customConverter) {
-            instance[key] = decoratorMetaData.customConverter.fromJson(json[decoratorMetaData.name || key]);
+            var jsonKey = getCaseInsensitiveMatch(json, decoratorMetaData.name || key);
+            instance[key] = decoratorMetaData.customConverter.fromJson(json[jsonKey]);
         }
         else {
             instance[key] = decoratorMetaData ? mapFromJson(decoratorMetaData, instance, json, key) : json[key];
