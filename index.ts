@@ -184,8 +184,10 @@ export function deserialize<T extends IGenericObject>(Clazz: {new(): T}, json: I
          * pass value to instance
          */
         if (decoratorMetaData && decoratorMetaData.customConverter) {
+            // @ts-ignore
             instance[key] =  decoratorMetaData.customConverter.fromJson(json[decoratorMetaData.name || key]);
         } else {
+            // @ts-ignore
             instance[key] = decoratorMetaData ? mapFromJson(decoratorMetaData, instance, json, key) : json[key];
         }
 
