@@ -172,7 +172,7 @@ export function deserialize<T extends IGenericObject>(Clazz: {new(): T}, json: I
     /**
      * init root class to contain json
      */
-    let instance = new Clazz();
+    let instance: IGenericObject = new Clazz();
 
     Object.keys(instance).forEach((key: string) => {
         /**
@@ -184,14 +184,14 @@ export function deserialize<T extends IGenericObject>(Clazz: {new(): T}, json: I
          * pass value to instance
          */
         if (decoratorMetaData && decoratorMetaData.customConverter) {
-            instance[key] =  decoratorMetaData.customConverter.fromJson(json[decoratorMetaData.name || key]);
+            instance[key] = decoratorMetaData.customConverter.fromJson(json[decoratorMetaData.name || key]);
         } else {
             instance[key] = decoratorMetaData ? mapFromJson(decoratorMetaData, instance, json, key) : json[key];
         }
 
     });
 
-    return instance;
+    return instance as T;
 }
 
 /**
