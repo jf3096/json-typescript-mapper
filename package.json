@@ -1,6 +1,6 @@
 {
-  "name": "json-typescript-mapper",
-  "version": "1.1.3",
+  "name": "@qunhe/json-typescript-mapper",
+  "version": "1.1.4",
   "typescript": {
     "definition": "index.d.ts"
   },
@@ -14,7 +14,8 @@
   },
   "scripts": {
     "test": "mocha ./spec/*.js",
-    "typings:generate": "tsc --declaration"
+    "typings:generate": "rm -rf build && tsc --outDir build --declaration",
+    "do-publish": "npm run typings:generate && cp package.json ./build && cd build && npm publish && cd -"
   },
   "description": "For single page application, data sources are obtained from API server. Instead of directly using api data, we \r definitely require an adapter layer to transform data as needed. Furthermore, \r the adapter inverse the the data dependency from API server(API Server is considered uncontrollable and \r highly unreliable as data structure may be edit by backend coder for some specific purposes)to our adapter \r which becomes reliable. Thus, this library is created as the adapter make use of es7 reflect decorator.",
   "main": "index.js",

@@ -6,7 +6,11 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noImplicitAny": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "lib": [
+      "es2017",
+      "dom"
+    ]
   },
   "exclude": [
     "node_modules"
