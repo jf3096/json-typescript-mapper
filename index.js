@@ -189,4 +189,3 @@ function serializeProperty(metadata, prop) {
     }
     return serialize(prop);
 }
-//# sourceMappingURL=index.js.map
