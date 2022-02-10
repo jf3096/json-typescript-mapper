@@ -130,7 +130,7 @@ function mapFromJson<T>(decoratorMetadata: IDecoratorMetaData<any>, instance: T,
         if (metadata && metadata.clazz || isPrimitiveOrPrimitiveClass(clazz)) {
             if (innerJson && isArrayOrArrayClass(innerJson)) {
                 return innerJson.map(
-                    (item: any) => deserialize(metadata.clazz, item)
+                    (item: any) => deserialize(metadata.clazz!, item)
                 );
             }
             return;
@@ -155,7 +155,7 @@ function mapFromJson<T>(decoratorMetadata: IDecoratorMetaData<any>, instance: T,
  *
  * @return {T} return mapped object
  */
-export function deserialize<T extends IGenericObject>(Clazz: {new(): T}, json: IGenericObject): T {
+export function deserialize<T extends IGenericObject>(Clazz: {new(): T}, json: IGenericObject): T | undefined {
     /**
      * As it is a recursive function, ignore any arguments that are unset
      */

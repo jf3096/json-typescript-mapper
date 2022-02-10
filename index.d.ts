@@ -51,7 +51,7 @@ export declare function JsonProperty<T>(metadata?: IDecoratorMetaData<T> | strin
  */
 export declare function deserialize<T extends IGenericObject>(Clazz: {
     new (): T;
-}, json: IGenericObject): T;
+}, json: IGenericObject): T | undefined;
 /**
  * Serialize: Creates a ready-for-json-serialization object from the provided model instance.
  * Only @JsonProperty decorated properties in the model instance are processed.

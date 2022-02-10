@@ -4,10 +4,10 @@ import dateConverter from './common/dateconverter'
 
 class Student {
     @JsonProperty('name')
-    fullName: string;
+    fullName?: string;
 
     @JsonProperty({name: 'dob', customConverter: dateConverter})
-    dateOfBirth: Date = undefined;
+    dateOfBirth?: Date = undefined;
 
     constructor() {
         this.fullName = void 0;
@@ -16,12 +16,12 @@ class Student {
 
 class Address {
     @JsonProperty('first-line')
-    firstLine: string;
+    firstLine?: string;
     @JsonProperty('second-line')
-    secondLine: string;
+    secondLine?: string;
     @JsonProperty({clazz: Student})
-    student: Student;
-    city: string;
+    student?: Student;
+    city?: string;
 
     constructor() {
         this.firstLine = void 0;
@@ -34,14 +34,14 @@ class Address {
 
 class Person {
     @JsonProperty('Name')
-    name: string;
+    name?: string;
     @JsonProperty('xing')
-    surname: string;
-    age: number;
+    surname?: string;
+    age?: number;
     @JsonProperty({clazz: Address, name: 'AddressArr'})
-    addressArr: Address[];
+    addressArr?: Address[];
     @JsonProperty({clazz: Address, name: 'Address'})
-    address: Address;
+    address?: Address;
 
     constructor() {
         this.name = void 0;
@@ -61,7 +61,7 @@ describe('index()', function () {
             "AddressArr": [] as Array<any>,
             "Address": null as any
         };
-        const person = deserialize(Person, json);
+        const person = deserialize(Person, json)!;
         expect(person.address).to.be.equals(void 0);
         expect(person.name).to.be.equal("Mark");
         expect(person.surname).to.be.equal("Galea");
@@ -77,12 +77,12 @@ describe('index()', function () {
                 name: "Ailun"
             }
         };
-        const address = deserialize(Address, addressjson);
+        const address = deserialize(Address, addressjson)!;
         expect(address.firstLine).to.be.equal("Some where");
         expect(address.secondLine).to.be.equal("Over Here");
         expect(address.city).to.be.equal("In This City");
         expect(address.student).to.be.an('object');
-        expect(address.student.fullName).to.be.equal('Ailun');
+        expect(address.student!.fullName).to.be.equal('Ailun');
     });
 
     it('complex json object #1', function () {
@@ -117,18 +117,18 @@ describe('index()', function () {
                 }
             }
         };
-        const person = deserialize(Person, json);
+        const person = deserialize(Person, json)!;
         expect(person.address).to.be.an.instanceOf(Address);
         expect(person.age).to.be.a('number');
         expect(person.name).to.be.a('string');
         expect(person.address).to.be.an('object');
-        expect(person.addressArr.length).to.be.equals(2);
-        expect(person.address.student.fullName).to.be.equals('Ailun');
+        expect(person.addressArr!.length).to.be.equals(2);
+        expect(person.address!.student!.fullName).to.be.equals('Ailun');
     });
 
     it('empty json object #1', function () {
         let json = {};
-        const person = deserialize(Person, json);
+        const person = deserialize(Person, json)!;
         expect(person.address).to.be.equal(void 0);
         expect(person.name).to.be.equal(void 0);
         expect(person.surname).to.be.equal(void 0);
@@ -169,7 +169,7 @@ describe('index()', function () {
         let json = {
             "NameTest": "Mark",
         };
-        const person = deserialize(Person, json);
+        const person = deserialize(Person, json)!;
         expect(person.name).to.be.equals(void 0);
     });
 
@@ -178,9 +178,9 @@ describe('index()', function () {
             "name": "John Doe",
             dob: "1995-11-10"
         };
-        const student = deserialize(Student, json);
+        const student = deserialize(Student, json)!;
         expect(student.fullName).to.be.equals('John Doe');
         expect(student.dateOfBirth).to.be.instanceof(Date);
-        expect(student.dateOfBirth.toString()).to.equal(new Date("1995-11-10").toString());
+        expect(student.dateOfBirth!.toString()).to.equal(new Date("1995-11-10").toString());
     });
 });

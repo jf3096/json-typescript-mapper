@@ -3,6 +3,10 @@
 #libraries
 node_modules
 
+build
+
+npm-debug.log
+
 #ide settings
 .idea
 .log
