@@ -1,6 +1,7 @@
 "use strict";
-require('reflect-metadata');
-var utils_1 = require('./libs/utils');
+Object.defineProperty(exports, "__esModule", { value: true });
+require("reflect-metadata");
+var utils_1 = require("./libs/utils");
 /**
  * Decorator variable name
  *
@@ -76,7 +77,7 @@ function getJsonProperty(target, propertyKey) {
 function hasAnyNullOrUndefined() {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i - 0] = arguments[_i];
+        args[_i] = arguments[_i];
     }
     return args.some(function (arg) { return arg === null || arg === undefined; });
 }
@@ -142,7 +143,12 @@ function deserialize(Clazz, json) {
             instance[key] = decoratorMetaData.customConverter.fromJson(json[decoratorMetaData.name || key]);
         }
         else {
-            instance[key] = decoratorMetaData ? mapFromJson(decoratorMetaData, instance, json, key) : json[key];
+            if (decoratorMetaData) {
+                instance[key] = mapFromJson(decoratorMetaData, instance, json, key);
+            }
+            else {
+                instance[key] = json[key] ? instance[key] = json[key] : instance[key] = instance[key];
+            }
         }
     });
     return instance;
